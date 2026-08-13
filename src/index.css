@@ -1,0 +1,52 @@
+:root {
+  --ink: #10241a;
+  --ink-soft: #3d5a48;
+  --mist: #e8f3ec;
+  --panel: rgba(255, 255, 255, 0.78);
+  --panel-solid: #fbfefc;
+  --leaf: #15803d;
+  --leaf-deep: #0f5c2e;
+  --teal: #0f766e;
+  --early: #c2410c;
+  --late: #b91c1c;
+  --healthy: #15803d;
+  --line: rgba(16, 36, 26, 0.1);
+  --shadow: 0 28px 80px rgba(16, 36, 26, 0.14);
+  --radius: 28px;
+  --font-display: "Syne", "Avenir Next", sans-serif;
+  --font-body: "DM Sans", "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--mist);
+  overflow-x: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background: rgba(21, 128, 61, 0.22);
+}
