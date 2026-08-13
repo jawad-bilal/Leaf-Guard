@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { checkHealth, predictDisease } from "./api";
+import CaseStudy from "./CaseStudy";
 import "./App.css";
 
 const DISEASE_COPY = {
@@ -76,6 +77,7 @@ function ConfidenceRing({ value, tone }) {
 export default function App() {
   const inputRef = useRef(null);
   const resultRef = useRef(null);
+  const [tab, setTab] = useState("detect");
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
@@ -101,10 +103,10 @@ export default function App() {
   }, [file]);
 
   useEffect(() => {
-    if (result && resultRef.current) {
+    if (result && resultRef.current && tab === "detect") {
       resultRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, [result]);
+  }, [result, tab]);
 
   const meta = useMemo(() => (result ? DISEASE_COPY[result.label] : null), [result]);
 
@@ -183,102 +185,146 @@ export default function App() {
           <span className="mark" aria-hidden="true" />
           <span>AetherLeaf</span>
         </div>
-        {/* <p className={`live ${apiReady ? "on" : apiReady === false ? "off" : ""}`}>
+        <nav className="nav-tabs" aria-label="Primary">
+          <button
+            type="button"
+            className={tab === "detect" ? "tab active" : "tab"}
+            onClick={() => setTab("detect")}
+          >
+            Detect
+          </button>
+          <button
+            type="button"
+            className={tab === "case" ? "tab active" : "tab"}
+            onClick={() => setTab("case")}
+          >
+            Case study
+          </button>
+        </nav>
+        <p className={`live ${apiReady ? "on" : apiReady === false ? "off" : ""}`}>
           <span className="dot" />
           {apiReady === null ? "Warming up" : apiReady ? "Model live" : "API offline"}
-        </p> */}
+        </p>
       </header>
 
       <main>
-        <section className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Potato leaf intelligence</p>
-            <h1 className="brand-hero">AetherLeaf</h1>
-            <p className="lede">
-              Drop a leaf photo. Our CNN model reads Early Blight, Late Blight, or Healthy in seconds.
-            </p>
-            <div className="cta-row">
-              <button type="button" className="btn primary" onClick={() => inputRef.current?.click()}>
-                Upload leaf image
-              </button>
-              {/* <p className="formats">JPG · JPEG · JFIF · PNG · WEBP · GIF · TIFF · BMP · ICO</p> */}
-            </div>
-          </div>
-
-          <div
-            className={`stage ${dragOver ? "dragging" : ""} ${preview ? "filled" : ""} ${loading ? "scanning" : ""}`}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragOver(true);
-            }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={onDrop}
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              accept={ACCEPT}
-              hidden
-              onChange={(e) => acceptFile(e.target.files?.[0])}
-            />
-
-            {!preview ? (
-              <button type="button" className="stage-empty" onClick={() => inputRef.current?.click()}>
-                <span className="pulse" aria-hidden="true" />
-                <strong>Drag & drop anywhere here</strong>
-                <span>or click to browse from your device</span>
-              </button>
-            ) : (
-              <div className="stage-filled">
-                <div className="frame">
-                  <img src={preview} alt="Selected potato leaf" />
-                  {loading && <div className="scanline" aria-hidden="true" />}
-                </div>
-                <div className="stage-actions">
-                  <button type="button" className="btn primary" onClick={onAnalyze} disabled={loading}>
-                    {loading ? "Reading leaf…" : "Analyze now"}
-                  </button>
-                  <button type="button" className="btn ghost" onClick={onReset} disabled={loading}>
-                    Clear
+        {tab === "case" ? (
+          <CaseStudy />
+        ) : (
+          <>
+            <section className="hero">
+              <div className="hero-copy">
+                <p className="eyebrow">Potato leaf intelligence</p>
+                <h1 className="brand-hero">AetherLeaf</h1>
+                <p className="lede">
+                  Drop a leaf photo. Our CNN model reads Early Blight, Late Blight, or Healthy in
+                  seconds.
+                </p>
+                <div className="cta-row">
+                  <button
+                    type="button"
+                    className="btn primary"
+                    onClick={() => inputRef.current?.click()}
+                  >
+                    Upload leaf image
                   </button>
                 </div>
               </div>
+
+              <div
+                className={`stage ${dragOver ? "dragging" : ""} ${preview ? "filled" : ""} ${loading ? "scanning" : ""}`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setDragOver(true);
+                }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={onDrop}
+              >
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept={ACCEPT}
+                  hidden
+                  onChange={(e) => acceptFile(e.target.files?.[0])}
+                />
+
+                {!preview ? (
+                  <button
+                    type="button"
+                    className="stage-empty"
+                    onClick={() => inputRef.current?.click()}
+                  >
+                    <span className="pulse" aria-hidden="true" />
+                    <strong>Drag & drop anywhere here</strong>
+                    <span>or click to browse from your device</span>
+                  </button>
+                ) : (
+                  <div className="stage-filled">
+                    <div className="frame">
+                      <img src={preview} alt="Selected potato leaf" />
+                      {loading && <div className="scanline" aria-hidden="true" />}
+                    </div>
+                    <div className="stage-actions">
+                      <button
+                        type="button"
+                        className="btn primary"
+                        onClick={onAnalyze}
+                        disabled={loading}
+                      >
+                        {loading ? "Reading leaf…" : "Analyze now"}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn ghost"
+                        onClick={onReset}
+                        disabled={loading}
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {error && <p className="error">{error}</p>}
+
+            {result && (
+              <section
+                ref={resultRef}
+                className={`verdict tone-${meta?.tone || "healthy"}`}
+                aria-live="polite"
+              >
+                <div className="verdict-top">
+                  <ConfidenceRing value={result.confidence} tone={meta?.tone || "healthy"} />
+                  <div>
+                    <p className="verdict-kicker">Diagnosis</p>
+                    <h2>{result.label}</h2>
+                    <p className="verdict-copy">{meta?.summary}</p>
+                  </div>
+                </div>
+
+                <ul className="scores">
+                  {result.probabilities.map((item, index) => (
+                    <li key={item.class_id} style={{ "--i": index }}>
+                      <div className="score-meta">
+                        <span>{item.label}</span>
+                        <strong>{confidencePct(item.confidence)}</strong>
+                      </div>
+                      <div className="score-bar">
+                        <span style={{ width: `${item.confidence * 100}%` }} />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             )}
-          </div>
-        </section>
-
-        {error && <p className="error">{error}</p>}
-
-        {result && (
-          <section ref={resultRef} className={`verdict tone-${meta?.tone || "healthy"}`} aria-live="polite">
-            <div className="verdict-top">
-              <ConfidenceRing value={result.confidence} tone={meta?.tone || "healthy"} />
-              <div>
-                <p className="verdict-kicker">Diagnosis</p>
-                <h2>{result.label}</h2>
-                <p className="verdict-copy">{meta?.summary}</p>
-              </div>
-            </div>
-
-            <ul className="scores">
-              {result.probabilities.map((item, index) => (
-                <li key={item.class_id} style={{ "--i": index }}>
-                  <div className="score-meta">
-                    <span>{item.label}</span>
-                    <strong>{confidencePct(item.confidence)}</strong>
-                  </div>
-                  <div className="score-bar">
-                    <span style={{ width: `${Math.max(item.confidence * 100, 1.2)}%` }} />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
+          </>
         )}
       </main>
 
       <footer className="foot">
-        <p>Built on our trained Keras model · works with camera photos, downloads, and browser uploads</p>
+        <p>Built on our trained Keras model. Works with camera photos, downloads, and browser uploads</p>
       </footer>
     </div>
   );

@@ -1,4 +1,4 @@
-# Potato Disease Classifier — Frontend (Vercel)
+# Potato Disease Classifier - Frontend (Vercel)
 
 React + Vite UI for AetherLeaf.
 
