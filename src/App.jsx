@@ -181,7 +181,7 @@ export default function App() {
       <header className="nav">
         <div className="nav-brand">
           <span className="mark" aria-hidden="true" />
-          <span>LeafGuard</span>
+          <span>AetherLeaf</span>
         </div>
         {/* <p className={`live ${apiReady ? "on" : apiReady === false ? "off" : ""}`}>
           <span className="dot" />
@@ -193,7 +193,7 @@ export default function App() {
         <section className="hero">
           <div className="hero-copy">
             <p className="eyebrow">Potato leaf intelligence</p>
-            <h1 className="brand-hero">LeafGuard</h1>
+            <h1 className="brand-hero">AetherLeaf</h1>
             <p className="lede">
               Drop a leaf photo. Our CNN model reads Early Blight, Late Blight, or Healthy in seconds.
             </p>

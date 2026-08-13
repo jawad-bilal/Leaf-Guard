@@ -1,6 +1,6 @@
 # Potato Disease Classifier — Frontend (Vercel)
 
-React + Vite UI for LeafGuard.
+React + Vite UI for AetherLeaf.
 
 ## Local run
 
